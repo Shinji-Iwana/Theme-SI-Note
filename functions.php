@@ -35,7 +35,8 @@ if (!function_exists('si_note_count_post_views')) {
      */
     function si_note_count_post_views(): void
     {
-        if (is_single() && !is_preview()) {
+        // 記事のプレビューと、テーマのライブプレビュー（カスタマイザー）の表示は数えない
+        if (is_single() && !is_preview() && !is_customize_preview()) {
             set_post_views(get_queried_object_id());
         }
     }

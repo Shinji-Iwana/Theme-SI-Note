@@ -16,3 +16,897 @@ Text Domain: theme-si-note
  * このファイルは、親テーマ（Theme-SI-Original）の style.css の後に読み込まれる。
  * si-note 独自のスタイル（本文の枠・トップページ・サイトマップなど）をここに書く。
  */
+
+/* =========================================================
+   WordPress の「追加CSS」から移したスタイル（2026-09-26）
+   本文の枠（AddQuicktag・ショートコードで入れるもの）・トップページ・サイトマップ・ページ送り
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   エックスサーバーの紹介（parts/xserver-box.php）
+   --------------------------------------------------------- */
+.xserver-box {
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin: 30px 0;
+  background: #f0f8ff; /* Xserverの淡いブルー */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  text-align: left;
+}
+
+.xserver-box h3 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2b7bb9; /* Xserverブルー */
+  border-left: 6px solid #2b7bb9;
+  padding-left: 10px;
+}
+
+.xserver-box p {
+  line-height: 1.7;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+/* ボタン（自然な幅） */
+.xserver-box a[href*="a8.net"] {
+  display: inline-block;
+  background: #2b7bb9;
+  color: #fff !important;
+  padding: 10px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.2s;
+  margin-top: 12px;
+}
+
+.xserver-box a[href*="a8.net"]:hover {
+  background: #1a5e8a;
+  transform: translateY(-2px);
+}
+
+/* A8の1px画像の余白ゼロ */
+.xserver-box img {
+  display: block;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+}
+
+@media (max-width: 600px) {
+  .xserver-box {
+    padding: 16px;
+  }
+  .xserver-box h3 {
+    font-size: 1.15rem;
+  }
+  .xserver-box a[href*="a8.net"] {
+    padding: 12px;
+  }
+}
+
+/* ---------------------------------------------------------
+   ロードマップ共通デザイン（基礎・全体・各カテゴリ）
+   --------------------------------------------------------- */
+.roadmap-step,
+.roadmap-category {
+  border: 2px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 25px 0;
+  background: #fafafa;
+}
+
+.roadmap-step h3,
+.roadmap-category h3 {
+  margin-top: 0;
+  font-size: 1.3em;
+  border-left: 6px solid #007acc;
+  padding-left: 10px;
+}
+
+.roadmap-step p,
+.roadmap-category p {
+  margin: 10px 0 15px;
+}
+
+.roadmap-step ul,
+.roadmap-category ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.roadmap-step ul li,
+.roadmap-category ul li {
+  margin-bottom: 8px;
+}
+
+/* ---------------------------------------------------------
+   インラインコード
+   --------------------------------------------------------- */
+.inline-code {
+  background: #f2f2f2;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 95%;
+  color: #333;
+  font-family: "Source Code Pro", Consolas, monospace;
+}
+
+/* ---------------------------------------------------------
+   サイトマップ（page-sitemap.php）
+   --------------------------------------------------------- */
+.html-sitemap {
+    padding: 20px 10px;
+}
+
+.html-sitemap h2 {
+    font-size: 1.6rem;
+    margin-top: 40px;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #ddd;
+}
+
+.html-sitemap ul {
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0;
+}
+
+.html-sitemap ul li {
+    margin: 6px 0;
+    padding-left: 1.2em;
+    position: relative;
+}
+
+.html-sitemap ul li a {
+    color: #0073aa;
+    text-decoration: none;
+}
+
+.html-sitemap ul li a:hover {
+    text-decoration: underline;
+}
+
+/* 子記事（カテゴリ配下の記事）を少しインデント */
+.html-sitemap ul ul {
+    margin-left: 1.2em;
+    border-left: 2px solid #eee;
+    padding-left: 1em;
+}
+
+/* 子カテゴリの記事一覧は、初めは閉じておく */
+.sitemap-posts {
+    display: none;
+    margin-left: 1.2em;
+    border-left: 2px solid #eee;
+    padding-left: 1em;
+}
+
+.sitemap-category.open .sitemap-posts {
+    display: block;
+}
+
+.sitemap-toggle {
+    cursor: pointer;
+    display: inline-block;
+    color: #0073aa;
+    text-decoration: none;
+}
+
+.sitemap-toggle::after {
+    content: " ▼";
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.sitemap-category.open > .sitemap-toggle::after {
+    content: " ▲";
+}
+
+.parent-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* ---------------------------------------------------------
+   トップページ：学習カテゴリのカード（home.php）
+   --------------------------------------------------------- */
+.top-cards .card-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.top-cards .category-card {
+  width: calc(50% - 10px);
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-sizing: border-box;
+  padding: 16px 20px;
+}
+
+@media (max-width: 768px) {
+  .top-cards .category-card {
+    width: 100%;
+  }
+}
+
+.top-cards .category-card .card-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.top-cards .category-card .card-icon {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.top-cards .category-card .card-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.top-cards .category-card .card-content h3 {
+  margin: 0 0 6px;
+  font-size: 1.2rem;
+}
+
+.top-cards .category-card .card-content p {
+  margin: 0 0 10px;
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.top-cards .category-card .card-button {
+  display: inline-block;
+  padding: 8px 14px;
+  background: #0073aa;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.top-cards .category-card .card-button:hover {
+  background: #005f8d;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* トップページ：人気記事の抜粋（新着記事と同じサイズ） */
+.top-popular .smanone2 {
+    font-size: 13px;
+    color: #1a1a1a;
+    line-height: 18px;
+}
+
+/* ---------------------------------------------------------
+   ページ送り：ずれの修正と中央寄せ
+   --------------------------------------------------------- */
+.st-pagelink {
+  text-align: center;
+}
+
+.st-pagelink .page-numbers {
+  float: none;
+  display: inline-block;
+  margin: 0 5px 5px;
+  height: auto;
+  line-height: 1.4;
+}
+
+.st-pagelink .page-numbers.current {
+  opacity: 1;
+  background-color: #0073aa;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* ---------------------------------------------------------
+   Udemyの紹介の枠
+   --------------------------------------------------------- */
+.udemy-box,
+.roadmap-udemy-box {
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin: 30px 0;
+  background: #fafafa;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.udemy-box h2,
+.roadmap-udemy-box h3 {
+  margin-top: 0;
+  font-weight: 700;
+  color: #333;
+  border-left: 6px solid #ff6f61; /* Udemyカラーに寄せたアクセント */
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+  background: none;
+  padding-left: 10px;
+}
+
+.udemy-box h3,
+.roadmap-udemy-box h4 {
+  background: #f2f2f2;
+}
+
+.udemy-box p,
+.roadmap-udemy-box p {
+  line-height: 1.7;
+  margin-bottom: 12px;
+  color: #444;
+}
+
+/* リンク（Udemyボタン風） */
+.udemy-box a,
+.roadmap-udemy-box a {
+  display: inline-block;
+  background: #ff6f61;
+  color: #fff !important;
+  padding: 10px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.udemy-box a:hover,
+.roadmap-udemy-box a:hover {
+  background: #e85b50;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+  .udemy-box,
+  .roadmap-udemy-box {
+    padding: 16px;
+  }
+  .udemy-box h2,
+  .roadmap-udemy-box h3 {
+    font-size: 1.15rem;
+  }
+  .udemy-box a,
+  .roadmap-udemy-box a {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+  }
+}
+
+/* ---------------------------------------------------------
+   書籍の紹介の枠
+   --------------------------------------------------------- */
+.book-box,
+.roadmap-book-box {
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin: 30px 0;
+  background: #fffef8; /* 書籍の紙の色 */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.book-box h2,
+.roadmap-book-box h3 {
+  margin-top: 0;
+  font-weight: 700;
+  color: #444;
+  border-left: 6px solid #f2c94c; /* 書籍＝黄色系 */
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+  background: none;
+  padding-left: 10px;
+}
+
+.book-box h3,
+.roadmap-book-box h4 {
+  background: #fff9e8;
+}
+
+.book-box p,
+.roadmap-book-box p {
+  line-height: 1.7;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+/* 書籍リンク（ボタン風） */
+.book-box a,
+.roadmap-book-box a {
+  display: inline-block;
+  background: #f2c94c;
+  color: #333 !important;
+  padding: 10px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.2s;
+  margin-top: 12px;
+}
+
+.book-box a:hover,
+.roadmap-book-box a:hover {
+  background: #e0b843;
+  transform: translateY(-2px);
+}
+
+/* A8・もしも等の1px画像の余白ゼロ */
+.book-box img,
+.roadmap-book-box img {
+  display: block;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+}
+
+/* Amazon・楽天のボタンの横並び */
+.book-links {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap; /* スマホで折り返し */
+}
+
+.book-links a {
+  flex: 1;               /* 幅を均等にする */
+  text-align: center;
+  white-space: nowrap;   /* 改行しない */
+}
+
+@media (max-width: 600px) {
+  .book-box,
+  .roadmap-book-box {
+    padding: 16px;
+  }
+  .book-box h2,
+  .roadmap-book-box h3 {
+    font-size: 1.15rem;
+  }
+  .book-box a,
+  .roadmap-book-box a {
+    padding: 12px;
+  }
+  .book-links {
+    flex-direction: column;
+  }
+}
+
+/* ---------------------------------------------------------
+   スクールの紹介の枠
+   --------------------------------------------------------- */
+.school-box,
+.roadmap-school-box {
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin: 30px 0;
+  background: #f6fff6; /* スクール＝グリーン系 */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.school-box h2,
+.roadmap-school-box h3 {
+  margin-top: 0;
+  font-weight: 700;
+  color: #2e7d32;
+  border-left: 6px solid #2e7d32;
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+  background: none;
+  padding-left: 10px;
+}
+
+.school-box h3,
+.roadmap-school-box h4 {
+  background: #e9f7e9;
+}
+
+.school-box p,
+.roadmap-school-box p {
+  line-height: 1.7;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.school-box a,
+.roadmap-school-box a {
+  display: inline-block;
+  background: #2e7d32;
+  color: #fff !important;
+  padding: 10px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.2s;
+  margin-top: 12px;
+}
+
+.school-box a:hover,
+.roadmap-school-box a:hover {
+  background: #256628;
+  transform: translateY(-2px);
+}
+
+/* A8・もしも等の1px画像の余白ゼロ */
+.school-box img,
+.roadmap-school-box img {
+  display: block;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+}
+
+@media (max-width: 600px) {
+  .school-box,
+  .roadmap-school-box {
+    padding: 16px;
+  }
+  .school-box h2,
+  .roadmap-school-box h3 {
+    font-size: 1.15rem;
+  }
+  .school-box a,
+  .roadmap-school-box a {
+    padding: 12px;
+  }
+}
+
+/* ---------------------------------------------------------
+   資格の紹介の枠（AWS資格＝ブルー系）
+   --------------------------------------------------------- */
+.cert-box {
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin: 30px 0;
+  background: #f0f7ff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.cert-box h2 {
+  margin-top: 0;
+  font-weight: 700;
+  color: #1e5aa8;
+  border-left: 6px solid #1e5aa8;
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+  background: none;
+  padding-left: 10px;
+}
+
+.cert-box h3 {
+  background: #e3efff;
+}
+
+.cert-box p {
+  line-height: 1.7;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.cert-box a {
+  display: inline-block;
+  background: #1e5aa8;
+  color: #fff !important;
+  padding: 10px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.2s;
+  margin-top: 8px;
+}
+
+.cert-box a:hover {
+  background: #174a8a;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+  .cert-box {
+    padding: 16px;
+  }
+  .cert-box h2 {
+    font-size: 1.15rem;
+  }
+  .cert-box a {
+    padding: 12px;
+  }
+}
+
+/* ---------------------------------------------------------
+   記事の見出し（アイキャッチ＋タイトル。single.php・page.php）
+   --------------------------------------------------------- */
+.article-header {
+  background-color: #e3f2fd;
+  border-radius: 8px;
+  padding: 16px 24px;
+  margin-bottom: 24px;
+}
+
+/* 画像＋タイトルの横並び */
+.header-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+  flex-wrap: nowrap; /* スマホでもできるだけ横並び */
+}
+
+/* 画像：最大300px、画面が狭ければ縮む */
+.header-icon img {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* タイトルは残りの幅を使う */
+.header-title {
+  font-size: 1.6em;
+  font-weight: bold;
+  margin: 0;
+  color: #333;
+  line-height: 1.4;
+  flex: 1;
+}
+
+@media (max-width: 480px) {
+  .header-top {
+    flex-wrap: nowrap;
+  }
+
+  .header-icon img {
+    max-width: 150px;
+  }
+}
+
+/* ---------------------------------------------------------
+   コードの枠
+   --------------------------------------------------------- */
+.code-block pre,
+.code-block code {
+  font-family: "Noto Sans JP", sans-serif !important;
+  font-size: 15px;
+}
+
+/* ---------------------------------------------------------
+   本文の枠（ポイント・FAQ・次に読む記事・関連記事・補足）
+   --------------------------------------------------------- */
+.point-box {
+  background: #F3F7FA;
+  border: 1px solid #DDE3E8;
+  padding: 12px 16px;
+  margin: 32px 0;
+  border-radius: 6px;
+}
+
+.point-box h2 {
+  border-left: 4px solid #4A90E2;
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+  padding-left: 12px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  background: none;
+}
+
+.point-box ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+/* FAQ */
+.faq-box {
+  border: 1px solid #DDE3E8;
+  padding: 12px 16px;
+  margin: 32px 0;
+  background: #F3F7FA;
+  border-radius: 6px;
+}
+
+.faq-item {
+  border: 1px solid #DDE3E8;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  background: #ffffff;
+}
+
+.faq-box h2 {
+  border-left: 4px solid #4A90E2;
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+  padding-left: 12px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  background: none;
+}
+
+.faq-q {
+  background: #E8F1FB;
+  padding: 12px 16px;
+  border-radius: 4px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.faq-a {
+  background: #ffffff;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-top: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.faq-label {
+  background: #4A90E2;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.faq-label-a {
+  background: #7BB661;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.entry-content .faq-box .faq-q p {
+  font-weight: 700 !important;
+  font-size: 16px !important;
+}
+
+.faq-q p,
+.faq-a p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+/*
+ * 次に読む記事
+ * 追加CSSでは2か所で定義していた。後の定義が効いていた部分（枠・見出し・リンク）と、
+ * 先の定義にしかなかった部分（段落・リスト）を1つにまとめた（見た目は変わらない）。
+ */
+.next-article-box {
+  border: 1px solid #DDE3E8;
+  padding: 12px 16px;
+  margin: 32px 0;
+  background: #F3F7FA;
+  border-radius: 6px;
+}
+
+.next-article-box h2 {
+  border-left: 4px solid #4A90E2;
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+  padding-left: 12px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  background: none;
+}
+
+.next-article-box p {
+  margin: 0 0 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+.next-article-box ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.next-article-box li {
+  margin-bottom: 6px;
+}
+
+.next-article-box a {
+  color: #1A73E8;
+  text-decoration: none;
+}
+
+.next-article-box a:hover {
+  text-decoration: underline;
+}
+
+/* 関連記事 */
+.related-box {
+  border: 1px solid #DDE3E8;
+  padding: 12px 16px;
+  margin: 32px 0;
+  background: #F3F7FA;
+  border-radius: 6px;
+}
+
+.related-box h2 {
+  border-left: 4px solid #4A90E2;
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+  padding-left: 12px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  background: none;
+}
+
+.related-box ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.related-box a {
+  color: #1A73E8;
+  text-decoration: none;
+}
+
+.related-box a:hover {
+  text-decoration: underline;
+}
+
+/* 補足 */
+.supplement-box {
+  border: 1px solid #DDE3E8;
+  padding: 12px 16px;
+  margin-top: 0;        /* 上の余白をなくす */
+  margin-bottom: 16px;
+  background: #F3F7FA;
+  border-radius: 6px;
+}
+
+.supplement-box h2 {
+  border-left: 4px solid #4A90E2;
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+  padding-left: 12px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  background: none;
+}
+
+.supplement-box ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.supplement-box a {
+  color: #1A73E8;
+  text-decoration: none;
+}
+
+.supplement-box a:hover {
+  text-decoration: underline;
+}
