@@ -35,8 +35,9 @@ if (!function_exists('si_note_count_post_views')) {
      */
     function si_note_count_post_views(): void
     {
-        // 記事のプレビューと、テーマのライブプレビュー（カスタマイザー）の表示は数えない
-        if (is_single() && !is_preview() && !is_customize_preview()) {
+        // 記事のプレビュー・テーマのライブプレビュー（カスタマイザー）・BlogOSのプレビューの表示は数えない
+        $blogos_preview = function_exists('blogos_is_preview') && blogos_is_preview();
+        if (is_single() && !is_preview() && !is_customize_preview() && !$blogos_preview) {
             set_post_views(get_queried_object_id());
         }
     }
