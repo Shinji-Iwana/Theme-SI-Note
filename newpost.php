@@ -1,6 +1,6 @@
 <?php
 /**
- * サイドバーの新着一覧
+ * サイドバーの新着一覧（si-note：見出し「新着記事」を表示）
  */
 ?>
 <div class="kanren">
@@ -19,7 +19,7 @@
 						<?php if ( has_post_thumbnail() ): // サムネイルを持っているときの処理 ?>
 							<?php the_post_thumbnail( 'thumbnail' ); ?>
 						<?php else: // サムネイルを持っていないときの処理 ?>
-							<img src="<?php echo get_template_directory_uri(); ?>/images/no-img.png" alt="no image" title="no image" width="100" height="100" />
+							<img src="<?php echo esc_url( get_template_directory_uri() . '/images/no-img.png' ); ?>" alt="no image" title="no image" width="100" height="100" />
 						<?php endif; ?>
 					</a></dt>
 				<dd>

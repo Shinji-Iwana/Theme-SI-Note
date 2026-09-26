@@ -1,0 +1,52 @@
+# Theme-SI-Note
+
+ブログ「現役システムエンジニアの備忘録」（https://si-note.com/ ）のテーマ。親テーマ **Theme-SI-Original** の子テーマ。
+
+## 使い方
+
+1. 親テーマ（`Theme-SI-Original`）と、このテーマ（`Theme-SI-Note`）の両方を、`wp-content/themes/` に置く。フォルダ名は変えない（`style.css` の `Template: Theme-SI-Original` で親テーマを指定しているため）。
+2. WordPress の「外観 → テーマ」で、このテーマを有効にする（親テーマは有効にしない）。
+
+## si-note 独自の部分
+
+| ファイル | 内容 |
+| --- | --- |
+| `style.css` | テーマの情報と、si-note 独自のスタイル |
+| `functions.php` | 表示回数の記録、コードの色付け（Prism）、本文の自動整形の順序、紹介の枠のショートコード、サイトマップの開閉、REST API の項目 |
+| `home.php` | トップページ（サイト紹介・学習カテゴリ・人気記事・記事一覧） |
+| `single.php` | 投稿（アイキャッチ付きの見出し、本文の下の関連記事、エックスサーバーの紹介） |
+| `page.php` | 固定ページ（アイキャッチ付きの見出し） |
+| `page-sitemap.php` | 固定ページ「サイトマップ」のテンプレート（ファイル名を変えると、割り当てが外れる） |
+| `kanren.php` | 関連記事（日付・カテゴリ・タグを表示） |
+| `newpost.php` | サイドバーの新着記事（見出しを表示） |
+| `comments.php` | コメントを表示しない |
+| `template-parts/article-header-icon.php` | 見出しの左のアイキャッチ |
+| `parts/` | 本文に差し込む紹介の枠（書籍・Udemy・スクール・資格）と、エックスサーバーの紹介 |
+
+上の表にないテンプレート（`archive.php`・`search.php`・`itiran.php` など）は、親テーマのものを使う。
+
+## 紹介の枠のショートコード
+
+| ショートコード | 枠 |
+| --- | --- |
+| `[excel_book_box_beginner]` | Excel の書籍（基礎） |
+| `[excel_book_box_function]` | Excel の書籍（関数） |
+| `[js_book_box]` | JavaScript の書籍 |
+| `[aws_book_box_beginner]` | AWS の書籍（初心者向け） |
+| `[excel_udemy_box_beginner]` | Excel の Udemy（初心者向け） |
+| `[aws_udemy_box_beginner]` | AWS の Udemy（初心者向け） |
+| `[js_school_box]` | JavaScript のスクール |
+| `[aws_school_box]` | AWS のスクール |
+| `[aws_cert_box_clf]` | AWS の資格（CLF） |
+| `[aws_cert_box_saa]` | AWS の資格（SAA） |
+
+枠を加えるときは、`parts/` にファイルを置き、`functions.php` の `SI_NOTE_BOX_SHORTCODES` に1行加える。
+
+## 表示回数
+
+投稿を表示するたびに、カスタムフィールド `post_views_count` に数える（トップページの「人気記事」の並びに使う）。以前のテーマから同じ名前で数えているため、名前を変えないこと。
+
+## STINGER8 のテーマ（stinger8）から切り替えるときの注意
+
+- 追加CSS・ヘッダー画像は、テーマごとに保存されるため、切り替えた後に設定し直す（追加CSSは、このテーマの `style.css` に移す）。
+- AdSense の自動広告のコードは、テーマには書かない。Site Kit の AdSense の設定で「コードを配置する」を有効にする。

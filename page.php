@@ -1,4 +1,10 @@
-<?php get_header(); ?>
+<?php
+/**
+ * 固定ページ（si-note）
+ *
+ * 親テーマの page.php との違い：タイトルの左にアイキャッチを置いた見出し（.article-header）
+ */
+get_header(); ?>
 
 <div id="content" class="clearfix">
 	<div id="contentInner">
@@ -9,14 +15,14 @@
 				<section id="breadcrumb">
 				<ol itemscope itemtype="http://schema.org/BreadcrumbList">
 					 <li itemprop="itemListElement" itemscope
-      itemtype="http://schema.org/ListItem"><a href="<?php echo home_url(); ?>" itemprop="item"><span itemprop="name">HOME</span></a> > <meta itemprop="position" content="1" /></li>
-					<?php 
+      itemtype="http://schema.org/ListItem"><a href="<?php echo esc_url( home_url() ); ?>" itemprop="item"><span itemprop="name">HOME</span></a> > <meta itemprop="position" content="1" /></li>
+					<?php
 					$i = 2;
-					foreach ( array_reverse( get_post_ancestors( $post->ID ) ) as $parid ) { ?>
+					foreach ( array_reverse( get_post_ancestors( get_queried_object_id() ) ) as $parid ) { ?>
 
 						<li itemprop="itemListElement" itemscope
-      itemtype="http://schema.org/ListItem"><a href="<?php echo get_page_link( $parid ); ?>" title="<?php echo  get_the_title(); ?>" itemprop="item"> <span itemprop="name"><?php echo get_page( $parid )->post_title; ?></span></a> > <meta itemprop="position" content="<?php echo $i; ?>" /></li>
-					<?php  $i++; } ?>
+      itemtype="http://schema.org/ListItem"><a href="<?php echo esc_url( get_page_link( $parid ) ); ?>" title="<?php echo esc_attr( get_the_title( $parid ) ); ?>" itemprop="item"> <span itemprop="name"><?php echo esc_html( get_the_title( $parid ) ); ?></span></a> > <meta itemprop="position" content="<?php echo (int) $i; ?>" /></li>
+					<?php $i++; } ?>
 				</ol>
 				</section>
 				<!--/ ぱんくず -->
@@ -27,59 +33,53 @@
 					<!--ループ開始 -->
 					<?php if (have_posts()) : while (have_posts()) :
 					the_post(); ?>
-				<div class="article-header">
-				<div class="header-top">
-<div class="header-icon">
-          <?php if ( has_post_thumbnail() ): // サムネイルを持っているときの処理 ?>
-            <?php the_post_thumbnail( 'thumbnail' ); ?>
-          <?php else: // サムネイルを持っていないときの処理 ?>
-            <img src="<?php echo get_template_directory_uri(); ?>/images/no-img.png" alt="no image" title="no image" width="300" height="300" />
-          <?php endif; ?>
-  </div>
+
 						<?php if(!is_front_page()){ ?>
-				<div class="header-title">
-					<h1 class="entry-title"><?php the_title(); //タイトル ?></h1>
-		  </div>
-					</div>
-				</div>
+							<div class="article-header">
+								<div class="header-top">
+									<?php get_template_part( 'template-parts/article-header-icon' ); ?>
+									<div class="header-title">
+										<h1 class="entry-title"><?php the_title(); // タイトル ?></h1>
+									</div>
+								</div>
+							</div>
 						<?php } ?>
 
 					<div class="mainbox">
 
 							<div class="entry-content">
-								<?php the_content(); //本文 ?>
+								<?php the_content(); // 本文 ?>
 							</div>
 
-							<?php //ページ改
-									$defaults = array(
-									'before'           => '<p class="tuzukicenter"><span class="tuzuki">' . __( '', 'default' ),
-									'after'            => '</span></p>',
-									'link_before'      => '&gt;&ensp;',
-									'link_after'       => '&ensp;',
-									'next_or_number'   => 'next',
-									'separator'        => ' ',
-									'nextpagelink'     => __( '続きを読む', 'default' ),
-									'previouspagelink' => __( '前のページへ', 'default' ),
-									'pagelink'         => '%',
-									'echo'             => 1
-									);
-									wp_link_pages( $defaults );
+							<?php // ページ分割
+									wp_link_pages( array(
+										'before'           => '<p class="tuzukicenter"><span class="tuzuki">',
+										'after'            => '</span></p>',
+										'link_before'      => '&gt;&ensp;',
+										'link_after'       => '&ensp;',
+										'next_or_number'   => 'next',
+										'separator'        => ' ',
+										'nextpagelink'     => '続きを読む',
+										'previouspagelink' => '前のページへ',
+										'pagelink'         => '%',
+										'echo'             => 1,
+									) );
 							?>
 
 					</div>
-				
+
 					<?php if( is_front_page() ):
-						get_template_part( 'sns-top' ); //トップ用ソーシャルボタン読み込み 
+						get_template_part( 'sns-top' ); // トップ用ソーシャルボタン読み込み
 					else:
-						get_template_part( 'sns' ); //ページ用ソーシャルボタン読み込み 
+						get_template_part( 'sns' ); // ページ用ソーシャルボタン読み込み
 					endif; ?>
 
 				<div class="blogbox">
 					<p><span class="kdate">
-						<?php if ( get_the_date() != get_the_modified_date() ) : //更新がある場合 ?>
+						<?php if ( get_the_date() != get_the_modified_date() ) : // 更新がある場合 ?>
 							投稿日：<?php echo esc_html( get_the_date() ); ?>
 							更新日：<time class="updated" datetime="<?php echo esc_attr( get_the_modified_date( DATE_ISO8601 ) ); ?>"><?php echo esc_html( get_the_modified_date() ); ?></time>
-						<?php else: //更新がない場合 ?>
+						<?php else: // 更新がない場合 ?>
 							投稿日：<time class="updated" datetime="<?php echo esc_attr( get_the_date( DATE_ISO8601 ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time>
 						<?php endif; ?>
 					</span></p>
@@ -95,10 +95,8 @@
 			</article>
 
 				<?php if ( comments_open() || get_comments_number() ) {
-					comments_template(); //コメント
+					comments_template(); // コメント（si-note では comments.php で表示しない）
 				} ?>
-
-				<?php get_template_part( 'newpost-page' ); //最近のエントリ ?>
 
 			</div>
 			<!--/post-->
