@@ -4,7 +4,8 @@
  *
  * 親テーマの single.php との違い：
  * - タイトルの左にアイキャッチを置いた見出し（.article-header）
- * - 関連記事を、本文の下（SNSボタンの前）に移し、エックスサーバーの紹介の枠を加えた
+ * - 関連記事を、本文の下（SNSボタンの前）に移し、エックスサーバーの紹介の枠を加えた（本文に関連記事がある記事では出さない）
+ * - パンくずは、親テーマの st_breadcrumb（カテゴリはロードマップのページへ。functions.php）
  * 表示回数は functions.php（si_note_count_post_views）で数える。
  */
 get_header(); ?>
@@ -14,23 +15,7 @@ get_header(); ?>
 
 		<div class="st-main">
 
-			<!-- ぱんくず -->
-			<section id="breadcrumb">
-			<ol itemscope itemtype="http://schema.org/BreadcrumbList">
-					 <li itemprop="itemListElement" itemscope
-      itemtype="http://schema.org/ListItem"><a href="<?php echo esc_url( home_url() ); ?>" itemprop="item"><span itemprop="name">HOME</span></a> > <meta itemprop="position" content="1" /></li>
-				<?php
-				$i = 2;
-				foreach ( st_breadcrumb_categories( st_first_category_id() ) as $catid ): ?>
-					<li itemprop="itemListElement" itemscope
-      itemtype="http://schema.org/ListItem"><a href="<?php echo esc_url( get_category_link( $catid ) ); ?>" itemprop="item">
-					<span itemprop="name"><?php echo esc_html( get_cat_name( $catid ) ); ?></span> </a> &gt;<meta itemprop="position" content="<?php echo (int) $i; ?>" /></li>
-				<?php
-				$i++;
-				endforeach; ?>
-			</ol>
-			</section>
-			<!--/ ぱんくず -->
+			<?php st_breadcrumb(); // ぱんくず（inc/template-functions.php） ?>
 
 			<div id="post-<?php the_ID(); ?>" <?php post_class('st-post'); ?>>
 				<article>
@@ -99,7 +84,7 @@ get_header(); ?>
 					</div><!-- .mainboxここまで -->
 
 						<!--関連記事-->
-						<?php get_template_part( 'kanren' ); ?>
+						<?php if ( !si_note_has_related_in_content() ) { get_template_part( 'kanren' ); } // 本文に関連記事がない記事だけ（functions.php） ?>
 
 					<?php get_template_part( 'parts/xserver-box' ); // エックスサーバーの紹介 ?>
 

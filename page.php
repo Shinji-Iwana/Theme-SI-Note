@@ -10,23 +10,7 @@ get_header(); ?>
 	<div id="contentInner">
 		<div class="st-main">
 
-			<?php if( !is_front_page() ): ?>
-				<!--ぱんくず -->
-				<section id="breadcrumb">
-				<ol itemscope itemtype="http://schema.org/BreadcrumbList">
-					 <li itemprop="itemListElement" itemscope
-      itemtype="http://schema.org/ListItem"><a href="<?php echo esc_url( home_url() ); ?>" itemprop="item"><span itemprop="name">HOME</span></a> > <meta itemprop="position" content="1" /></li>
-					<?php
-					$i = 2;
-					foreach ( array_reverse( get_post_ancestors( get_queried_object_id() ) ) as $parid ) { ?>
-
-						<li itemprop="itemListElement" itemscope
-      itemtype="http://schema.org/ListItem"><a href="<?php echo esc_url( get_page_link( $parid ) ); ?>" title="<?php echo esc_attr( get_the_title( $parid ) ); ?>" itemprop="item"> <span itemprop="name"><?php echo esc_html( get_the_title( $parid ) ); ?></span></a> > <meta itemprop="position" content="<?php echo (int) $i; ?>" /></li>
-					<?php $i++; } ?>
-				</ol>
-				</section>
-				<!--/ ぱんくず -->
-			<?php endif; ?>
+			<?php st_breadcrumb(); // ぱんくず（inc/template-functions.php） ?>
 
 			<div id="st-page" <?php post_class('post'); ?>>
 			<article>

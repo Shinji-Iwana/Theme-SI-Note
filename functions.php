@@ -58,6 +58,8 @@ if (!function_exists('si_note_enqueue_prism')) {
         wp_enqueue_script('prism-js', "{$base}/prism.min.js", [], null, true);
         wp_enqueue_script('prism-toolbar-js', "{$base}/plugins/toolbar/prism-toolbar.min.js", ['prism-js'], null, true);
         wp_enqueue_script('prism-copy-js', "{$base}/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js", ['prism-toolbar-js'], null, true);
+        // prism.min.js にない言語（Java・Python・SQL など）を、使っているものだけ自動で読み込む（html-rules.md 3-7）
+        wp_enqueue_script('prism-autoloader-js', "{$base}/plugins/autoloader/prism-autoloader.min.js", ['prism-js'], null, true);
     }
 }
 add_action('wp_enqueue_scripts', 'si_note_enqueue_prism');
@@ -138,3 +140,93 @@ add_action('rest_api_init', function (): void {
         'schema'       => null,
     ]);
 });
+
+/*
+ * パンくずリスト（親テーマの st_breadcrumb_items）：カテゴリをロードマップのページに置き換える
+ *
+ * ロードマップのページは、BlogOS の「カテゴリの立ち上げ」と同じ決まりで探す。
+ * 親カテゴリ：スラッグが親カテゴリのスラッグと同じ固定ページ（親のページなし。例：/js.html）
+ * 子カテゴリ：親ロードマップの子のページで、スラッグが子カテゴリのスラッグと同じもの（例：/js/js-basic.html）
+ * ロードマップのページがないカテゴリは、カテゴリの一覧のまま。ロードマップのページは、長いタイトルではなくカテゴリの名前を出す。
+ */
+if (!function_exists('si_note_roadmap_page')) {
+    function si_note_roadmap_page(int $categoryId): ?WP_Post
+    {
+        static $cache = [];
+        if (array_key_exists($categoryId, $cache)) {
+            return $cache[$categoryId];
+        }
+
+        $category = get_category($categoryId);
+        $page = null;
+        if ($category instanceof WP_Term) {
+            $parent = (int) $category->parent !== 0 ? si_note_roadmap_page((int) $category->parent) : null;
+            $path = (int) $category->parent === 0 ? $category->slug : ($parent !== null ? get_page_uri($parent) . '/' . $category->slug : null);
+            $found = $path !== null ? get_page_by_path($path) : null;
+            $page = $found instanceof WP_Post && $found->post_status === 'publish' ? $found : null;
+        }
+
+        return $cache[$categoryId] = $page;
+    }
+}
+
+if (!function_exists('si_note_roadmap_category')) {
+    /**
+     * ロードマップのページに当たるカテゴリ（ロードマップのページでなければ null）
+     */
+    function si_note_roadmap_category(int $pageId): ?WP_Term
+    {
+        $page = get_post($pageId);
+        $category = $page instanceof WP_Post ? get_category_by_slug($page->post_name) : false;
+        if (!$category instanceof WP_Term) {
+            return null;
+        }
+        $roadmap = si_note_roadmap_page($category->term_id);
+
+        return $roadmap !== null && $roadmap->ID === $page->ID ? $category : null;
+    }
+}
+
+add_filter('st_breadcrumb_items', function (array $items): array {
+    foreach ($items as $index => $item) {
+        if (isset($item['category_id']) && ($page = si_note_roadmap_page((int) $item['category_id'])) !== null) {
+            $items[$index]['url'] = get_permalink($page);
+        } elseif (isset($item['page_id']) && ($category = si_note_roadmap_category((int) $item['page_id'])) !== null) {
+            $items[$index]['name'] = $category->name;
+        }
+    }
+
+    return $items;
+});
+
+/*
+ * 関連記事（kanren.php）：本文に BlogOS が管理する関連記事（related-box、または「関連記事」の見出し）がある記事では出さない。
+ * すべての記事の本文に関連記事が入ったら、kanren.php とこの判定を削除する。
+ */
+if (!function_exists('si_note_has_related_in_content')) {
+    function si_note_has_related_in_content(?int $postId = null): bool
+    {
+        $content = (string) get_post_field('post_content', $postId ?? get_the_ID());
+
+        return str_contains($content, 'related-box') || preg_match('#<h[2-4][^>]*>\s*関連記事#u', $content) === 1;
+    }
+}
+
+/*
+ * 固定ページの URL の末尾に .html を付ける（プラグイン「.html on PAGES」から移した。例：/js.html、/js/js-basic.html）
+ *
+ * プラグインを無効にしても URL が変わらないよう、テーマで行う。プラグインと同時に有効でも、二重には付かない。
+ * プラグインを無効にした後は、「設定 → パーマリンク」で「変更を保存」を押す（プラグインが .html なしで書き換えのルールを保存し直すため）。
+ */
+add_action('init', function (): void {
+    global $wp_rewrite;
+    if (strpos($wp_rewrite->get_page_permastruct(), '.html') === false) {
+        $wp_rewrite->page_structure = $wp_rewrite->page_structure . '.html';
+    }
+}, -1);
+
+add_filter('user_trailingslashit', function (string $string, string $type): string {
+    global $wp_rewrite;
+
+    return $wp_rewrite->using_permalinks() && $wp_rewrite->use_trailing_slashes && $type === 'page' ? untrailingslashit($string) : $string;
+}, 66, 2);

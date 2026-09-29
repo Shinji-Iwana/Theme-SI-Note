@@ -4,7 +4,7 @@ Theme Name: Theme-SI-Note
 Template: Theme-SI-Original
 Author: S.I.
 Description: ブログ「現役システムエンジニアの備忘録」（si-note.com）のテーマ。Theme-SI-Original の子テーマ。
-Version: 1.0.0
+Version: 1.1.0
 Requires at least: 7.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -909,4 +909,91 @@ Text Domain: theme-si-note
 
 .supplement-box a:hover {
   text-decoration: underline;
+}
+
+/* ---------------------------------------------------------
+   html-rules.md（BlogOS の品質基準）の部品
+   --------------------------------------------------------- */
+
+/* 広告を含むことの表示（3-1。ステマ規制のため、本文と同じ大きさの文字で、枠で囲む） */
+.pr-note {
+  border: 1px solid #DDE3E8;
+  background: #FAFAFA;
+  padding: 8px 12px;
+  margin: 0 0 24px;
+  border-radius: 4px;
+  font-size: inherit;
+  color: #333;
+}
+
+/* 教材の枠の見出しの「PR」の印（3-10） */
+.pr-label {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border: 1px solid #999;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 1.5;
+  color: #666;
+  background: #fff;
+  vertical-align: middle;
+}
+
+/* 注意の枠（3-6。黄色の背景と左の線） */
+.caution-box {
+  background: #FFF8E1;
+  border-left: 4px solid #F2B600;
+  padding: 12px 16px;
+  margin: 24px 0;
+  border-radius: 0 6px 6px 0;
+}
+
+/* まとめ（3-12。point-box と同じ見た目） */
+.summary-box {
+  background: #F3F7FA;
+  border: 1px solid #DDE3E8;
+  padding: 12px 16px;
+  margin: 32px 0;
+  border-radius: 6px;
+}
+
+.summary-box h2 {
+  border-left: 4px solid #4A90E2;
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+  padding-left: 12px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  background: none;
+}
+
+.summary-box ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+/* 次に読む記事・関連記事の理由（3-13。少し小さい灰色の文字） */
+.next-article-box p.reason,
+.related-box p.reason {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #777;
+}
+
+/* 表（3-14）：スマホで横にはみ出す表は、表だけを横にスクロールする */
+@media only screen and (max-width: 599px) {
+  .entry-content table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* パンくずの区切り（親テーマの st_breadcrumb） */
+#breadcrumb .breadcrumb-sep {
+  margin: 0 4px 0 2px;
 }
