@@ -4,7 +4,7 @@ Theme Name: Theme-SI-Note
 Template: Theme-SI-Original
 Author: S.I.
 Description: ブログ「現役システムエンジニアの備忘録」（si-note.com）のテーマ。Theme-SI-Original の子テーマ。
-Version: 1.1.0
+Version: 1.1.1
 Requires at least: 7.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -715,6 +715,14 @@ Text Domain: theme-si-note
 .point-box ul {
   margin: 0;
   padding-left: 20px;
+}
+
+/* 情報の時点（html-rules.md 3-16。「この記事で分かること」の直後。少し小さい灰色の文字） */
+.entry-content p.info-as-of {
+  margin: -16px 0 24px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #777;
 }
 
 /* FAQ */
