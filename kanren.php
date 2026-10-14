@@ -26,7 +26,7 @@
 			<dl class="clearfix">
 				<dt><a href="<?php the_permalink() ?>">
 						<?php if ( has_post_thumbnail() ): // サムネイルを持っているときの処理 ?>
-							<?php the_post_thumbnail( 'thumbnail' ); ?>
+							<?php the_post_thumbnail( 'thumbnail', array( 'alt' => wp_strip_all_tags( get_the_title() ) ) ); // 画像だけのリンクに名前を付ける（PageSpeed Insights の link-name） ?>
 						<?php else: // サムネイルを持っていないときの処理 ?>
 							<img src="<?php echo esc_url( get_template_directory_uri() . '/images/no-img.png' ); ?>" alt="no image" title="no image" width="100" height="100" />
 						<?php endif; ?>

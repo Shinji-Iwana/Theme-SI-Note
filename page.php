@@ -8,7 +8,7 @@ get_header(); ?>
 
 <div id="content" class="clearfix">
 	<div id="contentInner">
-		<div class="st-main">
+		<main class="st-main"><?php // メインのランドマーク（ユーザー補助。PageSpeed Insights の landmark-one-main） ?>
 
 			<?php st_breadcrumb(); // ぱんくず（inc/template-functions.php） ?>
 
@@ -85,7 +85,7 @@ get_header(); ?>
 			</div>
 			<!--/post-->
 
-		</div><!-- /st-main -->
+		</main><!-- /st-main -->
 	</div>
 	<!-- /#contentInner -->
 	<?php get_sidebar(); ?>

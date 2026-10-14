@@ -27,7 +27,7 @@ get_header(); ?>
 
 <div id="content" class="clearfix">
   <div id="contentInner">
-    <div class="st-main">
+    <main class="st-main"><?php // メインのランドマーク（ユーザー補助。PageSpeed Insights の landmark-one-main） ?>
       <article>
         <div class="st-aside">
 
@@ -81,7 +81,7 @@ get_header(); ?>
                   <dt>
                     <a href="<?php the_permalink(); ?>">
                     <?php if ( has_post_thumbnail() ) : ?>
-                      <?php the_post_thumbnail( 'thumbnail' ); ?>
+                      <?php the_post_thumbnail( 'thumbnail', array( 'alt' => wp_strip_all_tags( get_the_title() ) ) ); // 画像だけのリンクに名前を付ける（PageSpeed Insights の link-name） ?>
                     <?php else : ?>
                       <img src="<?php echo esc_url( get_template_directory_uri() . '/images/no-img.png' ); ?>" alt="no image" width="100" height="100">
                     <?php endif; ?>
@@ -130,7 +130,7 @@ get_header(); ?>
 
         <?php get_template_part( 'sns-top' ); ?>
       </article>
-    </div>
+    </main><!-- /st-main -->
   </div>
   <?php get_sidebar(); ?>
 </div>

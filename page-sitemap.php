@@ -14,7 +14,7 @@ get_header(); ?>
 <div id="content">
   <div id="contentInner">
 
-    <div class="st-main">
+    <main class="st-main"><?php // メインのランドマーク（ユーザー補助。PageSpeed Insights の landmark-one-main） ?>
 
 			<?php if( !is_front_page() ): ?>
 				<!--ぱんくず -->
@@ -178,7 +178,7 @@ get_header(); ?>
         </article>
       </div><!-- /#st-page -->
 
-    </div><!-- /st-main -->
+    </main><!-- /st-main -->
 
   </div><!-- /#contentInner -->
 

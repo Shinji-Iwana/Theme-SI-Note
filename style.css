@@ -4,7 +4,7 @@ Theme Name: Theme-SI-Note
 Template: Theme-SI-Original
 Author: S.I.
 Description: ブログ「現役システムエンジニアの備忘録」（si-note.com）のテーマ。Theme-SI-Original の子テーマ。
-Version: 1.1.1
+Version: 1.2.0
 Requires at least: 7.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -1004,4 +1004,22 @@ Text Domain: theme-si-note
 /* パンくずの区切り（親テーマの st_breadcrumb） */
 #breadcrumb .breadcrumb-sep {
   margin: 0 4px 0 2px;
+}
+
+/* サイドバーの「新着記事」の見出し（newpost.php）：見出しの順番のため h2 にしたが、見た目は以前の h4 のまま
+   （親テーマの h2 の背景・線・余白を外す。PageSpeed Insights の heading-order） */
+#side .side-heading {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 1.33em 0;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: bold;
+  color: inherit;
+}
+
+#side .side-heading::before,
+#side .side-heading::after {
+  content: none;
 }
