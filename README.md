@@ -12,7 +12,7 @@
 | ファイル | 内容 |
 | --- | --- |
 | `style.css` | テーマの情報と、si-note 独自のスタイル |
-| `functions.php` | 表示回数の記録、コードの色付け（Prism。autoloader で Java・Python などにも色を付ける）、本文の自動整形の順序、紹介の枠のショートコード、サイトマップの開閉、REST API の項目、パンくずのロードマップへの置き換え、関連記事を出すかの判定、固定ページの URL の .html |
+| `functions.php` | 表示回数の記録、コードの色付け（Prism。autoloader で Java・Python などにも色を付ける。コードの枠のあるページだけ）、Contact Form 7 の読み込みをフォームのあるページだけにする、WP QUADS の AdSense の読み込みを async にする、本文の自動整形の順序、紹介の枠のショートコード、サイトマップの開閉、REST API の項目、パンくずのロードマップへの置き換え、関連記事を出すかの判定、固定ページの URL の .html |
 | `home.php` | トップページ（サイト紹介・学習カテゴリ・人気記事・記事一覧） |
 | `single.php` | 投稿（アイキャッチ付きの見出し、本文の下の関連記事（本文に関連記事がない記事だけ）、エックスサーバーの紹介） |
 | `page.php` | 固定ページ（アイキャッチ付きの見出し） |
@@ -72,6 +72,14 @@
 * 本文の枠の文字と背景の色は、コントラスト比 4.5:1 以上にする（1.2.1）。
   * Udemy のボタンと見出しの線は `#c8473b`、FAQ の「Q」は `#2f72c4`、「A」は `#3f7f2a`。
   * 次に読む記事・関連記事・補足のリンクは `#1765cc`、理由と情報の時点の文字は `#666`。
+
+## 表示の速さ（PageSpeed Insights）
+
+親テーマ（Theme-SI-Original 1.2.2）の対応に加えて、次のようにしている（1.2.2）。
+
+* Prism（コードの色付け）は、本文にコードの枠（`<pre>`、または `language-` の class）があるページだけで読み込む。読み込むページでは、配信元（cdnjs）に先に接続しておく（preconnect）。コピーのボタンの CSS（`prism-toolbar-css`）は、表示を止めずに読み込む。
+* Contact Form 7 の CSS・JavaScript は、フォームのあるページ（お問い合わせ）だけで読み込む（フィルター `wpcf7_load_css`・`wpcf7_load_js`）。
+* WP QUADS（広告のプラグイン）が `<head>` に出す AdSense の読み込み（async なし）を、async にする。WP QUADS の出力をそのまま書き換えているため、WP QUADS の更新で出力が変わると効かなくなる（そのときは、PageSpeed Insights の「レンダリングを妨げるリクエスト」に `adsbygoogle.js` がまた出る）。
 
 ## STINGER8 のテーマ（stinger8）から切り替えるときの注意
 

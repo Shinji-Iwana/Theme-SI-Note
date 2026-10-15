@@ -44,12 +44,33 @@ if (!function_exists('si_note_count_post_views')) {
 }
 add_action('template_redirect', 'si_note_count_post_views');
 
+if (!function_exists('si_note_has_code_block')) {
+    /**
+     * 表示しているページの本文に、コードの枠（<pre>、または Prism の language- の class）があるか
+     */
+    function si_note_has_code_block(): bool
+    {
+        if (!is_singular()) {
+            return false;
+        }
+        $content = (string) get_post_field('post_content', get_queried_object_id());
+
+        return str_contains($content, '<pre') || str_contains($content, 'language-');
+    }
+}
+
 if (!function_exists('si_note_enqueue_prism')) {
     /**
      * コードの色付け・コピーのボタン（Prism）
+     *
+     * コードの枠がないページ（トップページ・一覧・コードのない記事など）では読み込まない（PageSpeed Insights の「レンダリングを妨げるリクエスト」）。
      */
     function si_note_enqueue_prism(): void
     {
+        if (!si_note_has_code_block()) {
+            return;
+        }
+
         $base = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0';
 
         wp_enqueue_style('prism-css', "{$base}/themes/prism-tomorrow.min.css", [], null);
@@ -63,6 +84,58 @@ if (!function_exists('si_note_enqueue_prism')) {
     }
 }
 add_action('wp_enqueue_scripts', 'si_note_enqueue_prism');
+
+/*
+ * コピーのボタンの CSS は、表示を止めずに読み込む（ボタンは、ページの最後の JavaScript が作るため、最初の表示には要らない）。
+ * コードの枠そのものの CSS（prism-css）は、後から効くと枠の大きさが変わって表示がずれるため、今のまま読み込む。
+ */
+add_filter('st_non_blocking_styles', fn (array $handles): array => [...$handles, 'prism-toolbar-css']);
+
+/*
+ * Prism の配信元（cdnjs）に、先に接続しておく
+ */
+add_filter('wp_resource_hints', function (array $urls, string $relation): array {
+    if ($relation === 'preconnect' && si_note_has_code_block()) {
+        $urls[] = 'https://cdnjs.cloudflare.com';
+    }
+
+    return $urls;
+}, 10, 2);
+
+/*
+ * Contact Form 7 の CSS・JavaScript は、フォームのあるページ（お問い合わせ）だけで読み込む。
+ * 何もしないと、全部のページで読み込まれる（PageSpeed Insights の「レンダリングを妨げるリクエスト」）。
+ */
+if (!function_exists('si_note_has_contact_form')) {
+    function si_note_has_contact_form(): bool
+    {
+        if (!is_singular()) {
+            return false;
+        }
+        $content = (string) get_post_field('post_content', get_queried_object_id());
+
+        return has_shortcode($content, 'contact-form-7') || str_contains($content, 'wp:contact-form-7/');
+    }
+}
+add_filter('wpcf7_load_css', fn ($load) => $load && si_note_has_contact_form());
+add_filter('wpcf7_load_js', fn ($load) => $load && si_note_has_contact_form());
+
+/*
+ * WP QUADS（広告のプラグイン）が <head> に出す AdSense の読み込み（async なし）を、async にする。
+ * async がないと、読み込み終わるまで表示が止まる（PageSpeed Insights の「レンダリングを妨げるリクエスト」）。
+ * 広告の枠は (adsbygoogle = window.adsbygoogle || []).push({}) で登録するため、後から読み込まれても表示される。
+ * WP QUADS が出すのは wp_head の優先度 10（quads_common_head_code）なので、その前後で出力を受け取って書き換える。
+ */
+add_action('wp_head', function (): void {
+    ob_start();
+}, 9);
+add_action('wp_head', function (): void {
+    echo str_replace(
+        '<script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>',
+        '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>',
+        (string) ob_get_clean()
+    );
+}, 11);
 
 /*
  * 本文の自動整形（段落・改行の変換）を、ショートコードの処理の後にする
