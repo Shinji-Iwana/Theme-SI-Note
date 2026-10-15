@@ -47,7 +47,16 @@ get_header(); ?>
               <div class="card category-card">
                 <div class="card-inner">
                   <div class="card-icon">
-                    <img src="<?php echo esc_url( $card['icon'] ); ?>" alt="<?php echo esc_attr( $card['alt'] ?? $card['title'] ); ?>">
+                    <?php
+                    // 表示は 80px なので、縮小版（srcset）を使う（元の画像は 1枚 150〜200KB あり、トップページの表示が遅くなるため。PageSpeed Insights の「画像配信を改善する」）
+                    $si_note_icon_alt = $card['alt'] ?? $card['title'];
+                    $si_note_icon_id  = attachment_url_to_postid( home_url( $card['icon'] ) );
+                    if ( $si_note_icon_id ) {
+                      echo wp_get_attachment_image( $si_note_icon_id, 'thumbnail', false, array( 'alt' => $si_note_icon_alt, 'sizes' => '80px' ) );
+                    } else {
+                      ?><img src="<?php echo esc_url( $card['icon'] ); ?>" alt="<?php echo esc_attr( $si_note_icon_alt ); ?>" width="80" height="80"><?php
+                    }
+                    ?>
                   </div>
                   <div class="card-content">
                     <h3><?php echo esc_html( $card['title'] ); ?></h3>

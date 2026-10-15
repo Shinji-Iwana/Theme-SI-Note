@@ -121,21 +121,26 @@ add_filter('wpcf7_load_css', fn ($load) => $load && si_note_has_contact_form());
 add_filter('wpcf7_load_js', fn ($load) => $load && si_note_has_contact_form());
 
 /*
- * WP QUADS（広告のプラグイン）が <head> に出す AdSense の読み込み（async なし）を、async にする。
- * async がないと、読み込み終わるまで表示が止まる（PageSpeed Insights の「レンダリングを妨げるリクエスト」）。
+ * WP QUADS（広告のプラグイン）が <head> に出す AdSense の読み込み（async なし）を直す。
+ * Site Kit も AdSense を（async で）読み込むため、二重になっている。async がないと、読み込み終わるまで表示が止まる
+ * （PageSpeed Insights の「レンダリングを妨げるリクエスト」）。二重の読み込みは、トップページの画像の読み込みとも取り合う。
+ * - Site Kit の読み込み（adsbygoogle.js?client=）があれば、WP QUADS の分は消す。
+ * - なければ（Site Kit の AdSense を止めたときなど）、WP QUADS の分を async にする（広告が出なくならないように）。
  * 広告の枠は (adsbygoogle = window.adsbygoogle || []).push({}) で登録するため、後から読み込まれても表示される。
- * WP QUADS が出すのは wp_head の優先度 10（quads_common_head_code）なので、その前後で出力を受け取って書き換える。
+ * <head> の出力（wp_head）をまとめて受け取り、書き換えてから出す。
  */
 add_action('wp_head', function (): void {
     ob_start();
-}, 9);
+}, PHP_INT_MIN);
 add_action('wp_head', function (): void {
-    echo str_replace(
-        '<script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>',
-        '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>',
-        (string) ob_get_clean()
-    );
-}, 11);
+    $head = (string) ob_get_clean();
+    $quads = '<script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>';
+    $replacement = str_contains($head, 'pagead/js/adsbygoogle.js?client=')
+        ? ''
+        : '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>';
+
+    echo str_replace($quads, $replacement, $head);
+}, PHP_INT_MAX);
 
 /*
  * 本文の自動整形（段落・改行の変換）を、ショートコードの処理の後にする
